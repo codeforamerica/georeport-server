@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service_requests>
+  <request>
+    <service_request_id>{{ sr.service_request_id }}</service_request_id>
+    <service_notice>{{ sr.service_notice }}</service_notice>
+    <account_id>{{ sr.account_id }}</account_id>
+  </request>
+</service_requests>

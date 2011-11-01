@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service_definition>
+  <service_code>{{ definition.service_code }}</service_code>	
+  <attributes>
+    {% for attribute in definition.attributes %}
+    <attribute>
+      <variable>{{ attribute.variable }}</variable>
+      <code>{{ attribute.code }}</code>
+      <datatype>{{ attribute.datatype }}</datatype>
+      <required>{{ attribute.required }}</required>
+      <datatype_description>{{ attribute.datatype_description }}</datatype_description>		
+      <order>{{ attribute.order }}</order>
+      <description>{{ attribute.description }}</description>
+      <values>
+        {% for val in attribute['values'] %}
+        <value>
+          <key>{{ val.key }}</key>
+          <name>{{ val.name }}</name>
+        </value>
+        {% endfor %}
+      </values>
+    </attribute>
+    {% endfor %}
+  </attributes>
+</service_definition>

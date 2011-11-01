@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<discovery>
+  <changeset>{{ discovery.changeset }}</changeset>
+  <contact>{{ discovery.contact }}</contact>
+  <key_service>{{ discovery.key_service }}</key_service>
+  <endpoints>
+    {% for endpoint in discovery.endpoints %}
+    <endpoint>
+      <specification>{{ endpoint.specification }}</specification>
+      <url>{{ endpoint.url }}</url>
+      <changeset>{{ endpoint.changeset }}</changeset>
+      <type>{{ endpoint.type }}</type>
+      <formats>
+        {% for format in endpoint.formats %}
+      	<format>{{ format }}</format>
+        {% endfor %}
+      </formats>
+    </endpoint>
+    {% endfor %}
+  </endpoints>
+</discovery>

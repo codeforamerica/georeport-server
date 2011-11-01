@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service_requests>
+  {% for sr in service_requests %}
+  <request>
+    <service_request_id>{{ sr.service_request_id }}</service_request_id>
+    <status>{{ sr.status }}</status>
+    <status_notes>{{ sr.status_notes }}</status_notes>
+    <service_name>{{ sr.service_name }}</service_name>
+    <service_code>{{ sr.service_code }}</service_code>
+    <description>{{ sr.description }}</description>
+    <agency_responsible>{{ sr.agency_responsible }}</agency_responsible>
+    <service_notice>{{ sr.service_notice }}</service_notice>
+    <requested_datetime>{{ sr.requested_datetime }}</requested_datetime>
+    <updated_datetime>{{ sr.updated_datetime }}</updated_datetime>
+    <expected_datetime>{{ sr.expected_datetime }}</expected_datetime>
+    <address>{{ sr.address }}</address>
+    <address_id>{{ sr.address_id }}</address_id>
+    <zipcode>{{ sr.zipcode }}</zipcode>
+    <lat>{{ sr.lat }}</lat>
+    <long>{{ sr.long }}</long>
+    <media_url>{{ sr.media_url }}</media_url>
+  </request>
+  {% endfor %}
+</service_requests>

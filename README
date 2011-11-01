@@ -1,0 +1,10 @@
+Installation:
+> mkdir georeport
+> cd georeport
+> virtual env
+> . env/bin/activate
+> easy_install Flask
+
+To run server on localhost:5000:
+> ptyhon v2.py
+

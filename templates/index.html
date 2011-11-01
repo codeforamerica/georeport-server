@@ -1,0 +1,320 @@
+
+{% extends "layout.html" %}
+{% block title %}GeoReport v2 Server{% endblock %}
+{% block content %}
+
+      <div class="hero-unit">
+        <h1>GeoReport <em>v2</em> Server</h1>
+        <p>The <em>GeoReport API</em> allows developers to build applications
+        to report non-emergency issues such as graffiti, potholes, and
+        street cleaning directly to government organizations like
+        cities and counties.</p>
+        <p><a href="http://open311.org/learn/" class="btn success large">Learn more &raquo;</a></p>
+      </div>
+
+      <div class="row">
+        <div class="span5">
+          <h6>API</h6>
+            <ul>
+              <li><a href="#service-list">Service List</a></li>
+              <li><a href="#service-definition">Service Definition</a></li>
+              <li><a href="#create-sr">Create Service Request</a></li>
+              <li><a href="#get-requests">Query Multiple Service Requests</a></li>
+              <li><a href="#get-request">Query a Single Service Request</a></li>
+              <li><a href="#tokens">Lookup Request ID from Token</a></li>
+            </ul>
+        </div>
+        <div class="span5">
+          <h6>Register for an API Key</h6>
+           <p>Register for an API key to report non-emergency issues
+           directly to the county.</p>
+          <p><a class="btn primary" href="#">Register &raquo;</a></p>
+       </div>
+        <div class="span6">
+          <h6>Fork on GitHub</h6>
+          <p>Download, fork, pull, file issues, and more with the
+          GeoReport v2 Server repository on Github.</p>
+          <p><a target="_blank" href="#" class="btn primary">GeoReport on GitHub »</a></p>
+        </div>
+      </div>
+
+      <section id="service-list">
+        <div class="page-header">
+          <h1>Service List <small>Available service request types</small></h1>
+        </div>
+        <div class="row">
+          <div class="span4">
+            <dl>
+              <dt>Formats</dt>
+              <dd><code>JSON, XML</code></dd>
+              <dt>HTTP Method</dt>
+              <dd><span class="label notice">GET</span></dd>
+              <dt>API Key Required</dt>
+              <dd><span class="label">No</span></dd>
+            </dl>
+          </div>
+          <div class="span12">
+            <h5>Request</h5>
+            <pre>GET <a href="services.json?jurisdiction_id={{ jurisdiction }}">/services.json?jurisdiction_id={{ jurisdiction }}</a></pre>
+            <h5>Response</h5>
+            <pre>
+[
+  {
+    "service_code":001,
+    "service_name":"Cans left out 24x7",
+    "description":"Garbage or recycling cans that have been left out for more than 24 hours after collection. Violators will be cited.",
+    "metadata":true,
+    "type":"realtime",
+    "keywords":"lorem, ipsum, dolor",
+    "group":"sanitation"
+  },
+  {
+    "service_code":002,
+    "metadata":true,
+    "type":"realtime",
+    "keywords":"lorem, ipsum, dolor",
+    "group":"street",
+    "service_name":"Construction plate shifted",
+    "description":"Metal construction plate covering the street or sidewalk has been moved."
+  },
+  {
+    "service_code":003,
+    "metadata":true,
+    "type":"realtime",
+    "keywords":"lorem, ipsum, dolor",
+    "group":"street",
+    "service_name":"Curb or curb ramp defect",
+    "description":"Sidewalk curb or ramp has problems such as cracking, missing pieces, holes, and/or chipped curb."
+  }
+]
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="service-definition">
+        <div class="page-header">
+          <h1>Service Definition <small>Questions associated with a service request</small></h1>
+        </div>
+        <div class="row">
+          <div class="span4">
+            <dl>
+              <dt>Formats</dt>
+              <dd><code>JSON, XML</code></dd>
+              <dt>HTTP Method</dt>
+              <dd><span class="label notice">GET</span></dd>
+              <dt>API Key Required</dt>
+              <dd><span class="label">No</span></dd>
+            </dl>
+          </div>
+          <div class="span12">
+            <h5>Request</h5>
+            <pre>GET <a href="/services/DMV66.json?jurisdiction_id={{ jurisdiction }}">/services/DMV66.json?jurisdiction_id={{ jurisdiction }}</a></pre>
+            <h5>Response</h5>
+            <pre>
+{
+  "service_code":"DMV66",
+  "attributes":[
+    {
+      "variable":true,
+      "code":"WHISHETN",
+      "datatype":"singlevaluelist",
+      "required":true,
+      "datatype_description":null,
+      "order":1,
+      "description":"What is the ticket/tag/DL number?",
+      "values":[
+        {
+          "key":123,
+          "name":"Ford"
+        },
+        {
+          "key":124,
+          "name":"Chrysler"
+        }
+      ]
+    }
+  ]
+}
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="create-sr">
+        <div class="page-header">
+          <h1>Create Service Request <small>Report a service request</small></h1>
+        </div>
+        <div class="row">
+          <div class="span4">
+            <dl>
+              <dt>Formats</dt>
+              <dd><code>JSON, XML</code></dd>
+              <dt>HTTP Method</dt>
+              <dd><span class="label warning">POST</span></dd>
+              <dt>API Key Required</dt>
+              <dd><span class="label important">Yes</span></dd>
+            </dl>
+          </div>
+          <div class="span12">
+            <h5>Request</h5>
+            <pre>POST /requests.json?jurisdiction_id={{ jurisdiction }}&api_key=xyz</pre>
+            <h5>Response</h5>
+            <pre>
+[
+  {
+    "service_request_id":293944,
+    "service_notice":"The City will inspect and require the responsible party to correct within 24 hours and/or issue a Correction Notice or Notice of Violation of the Public Works Code",
+    "account_id":null
+  }
+]
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="get-requests">
+        <div class="page-header">
+          <h1>Get Service Requests <small>Query status of multiple service requests</small></h1>
+        </div>
+        <div class="row">
+          <div class="span4">
+            <dl>
+              <dt>Formats</dt>
+              <dd><code>JSON, XML</code></dd>
+              <dt>HTTP Method</dt>
+              <dd><span class="label notice">GET</span></dd>
+              <dt>API Key Required</dt>
+              <dd><span class="label">No</span></dd>
+            </dl>
+          </div>
+          <div class="span12">
+            <h5>Request</h5>
+            <pre>GET <a href="/requests.json?start_date=2010-05-24T00:00:00Z&end_date=2010-06-24T00:00:00Z&status=open&jurisdiction_id=city.gov">/requests.xml?start_date=2010-05-24T00:00:00Z&end_date=2010-06-24T00:00:00Z&status=open&jurisdiction_id={{ jurisdiction }}</a></pre>
+            <h5>Response</h5>
+            <pre>
+[
+  {
+    "service_request_id":638344,
+    "status":"closed",
+    "status_notes":"Duplicate request.",
+    "service_name":"Sidewalk and Curb Issues",
+    "service_code":006,
+    "description":null,
+    "agency_responsible":null,
+    "service_notice":null,
+    "requested_datetime":"2010-04-14T06:37:38-08:00",
+    "updated_datetime":"2010-04-14T06:37:38-08:00",
+    "expected_datetime":"2010-04-15T06:37:38-08:00",
+    "address":"8TH AVE and JUDAH ST",
+    "address_id":545483,
+    "zipcode":94122,
+    "lat":37.762221815,
+    "long":-122.4651145,
+    "media_url":"http://city.gov.s3.amazonaws.com/requests/media/638344.jpg "
+  },
+  {
+    "service_request_id":638349,
+    "status":"open",
+    "status_notes":null,
+    "service_name":"Sidewalk and Curb Issues",
+    "service_code":006,
+    "description":null,
+    "agency_responsible":null,
+    "service_notice":null,
+    "requested_datetime":"2010-04-19T06:37:38-08:00",
+    "updated_datetime":"2010-04-19T06:37:38-08:00",
+    "expected_datetime":"2010-04-19T06:37:38-08:00",
+    "address":"8TH AVE and JUDAH ST",
+    "address_id":545483,
+    "zipcode":94122,
+    "lat":37.762221815,
+    "long":-122.4651145,
+    "media_url":"http://city.gov.s3.amazonaws.com/requests/media/638349.jpg"
+  }
+]
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="get-request">
+        <div class="page-header">
+          <h1>Get a Service Request <small>Query status of a single service request</small></h1>
+        </div>
+        <div class="row">
+          <div class="span4">
+            <dl>
+              <dt>Formats</dt>
+              <dd><code>JSON, XML</code></dd>
+              <dt>HTTP Method</dt>
+              <dd><span class="label notice">GET</span></dd>
+              <dt>API Key Required</dt>
+              <dd><span class="label">No</span></dd>
+            </dl>
+          </div>
+          <div class="span12">
+            <h5>Request</h5>
+            <pre>GET <a href="/requests/638344.json?jurisdiction_id={{ jurisdiction }}">/requests/638344.json?jurisdiction_id={{ jurisdiction }}</a></pre>
+            <h5>Response</h5>
+            <pre>
+[
+  {
+    "service_request_id":638344,
+    "status":"closed",
+    "status_notes":"Duplicate request.",
+    "service_name":"Sidewalk and Curb Issues",
+    "service_code":006,
+    "description":null,
+    "agency_responsible":null,
+    "service_notice":null,
+    "requested_datetime":"2010-04-14T06:37:38-08:00",
+    "updated_datetime":"2010-04-14T06:37:38-08:00",
+    "expected_datetime":"2010-04-15T06:37:38-08:00",
+    "address":"8TH AVE and JUDAH ST",
+    "address_id":545483,
+    "zipcode":94122,
+    "lat":37.762221815,
+    "long":-122.4651145,
+    "media_url":"http://city.gov.s3.amazonaws.com/requests/media/638344.jpg"
+  }
+]
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="tokens">
+        <div class="page-header">
+          <h1>Token <small>Lookup a service request from a temporary token</small></h1>
+        </div>
+        <div class="row">
+          <div class="span4">
+            <dl>
+              <dt>Formats</dt>
+              <dd><code>JSON, XML</code></dd>
+              <dt>HTTP Method</dt>
+              <dd><span class="label notice">GET</span></dd>
+              <dt>API Key Required</dt>
+              <dd><span class="label">No</span></dd>
+            </dl>
+          </div>
+          <div class="span12">
+            <h5>Request</h5>
+            <pre>GET <a href="/tokens/123.json?jurisdiction_id={{ jurisdiction }}">/tokens/123.json?jurisdiction_id={{ jurisdiction }}</a></pre>
+            <h5>Response</h5>
+            <pre>
+[
+  {
+    "service_request_id":638344,
+    "token":12345
+  }
+]
+            </pre>
+          </div>
+        </div>
+      </section>
+
+{% endblock %}
+
+

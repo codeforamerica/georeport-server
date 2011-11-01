@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<services>
+  {% for service in services %}
+  <service>
+    <service_code>{{ service.service_code }}</service_code>
+    <service_name>{{ service.name }}</service_name>
+    <description>{{ service.description }}</description>
+    <metadata>{{ service.metadata }}</metadata>
+    <type>{{ service.type }}</type>
+    <keywords>{{ service.keywords }}</keywords>
+    <group>{{ service.group }}</group>
+  </service>
+  {% endfor %}
+</services>
