@@ -6,14 +6,13 @@ A simple Open311 GeoReport v2 server implementation.  Can be extended to integra
 
 Usage
 -----
-```$ git clone http://github.com/miamidade/georeport-server.git
+```
+$ git clone http://github.com/miamidade/georeport-server.git
 $ cd georeport-server
 $ virtualenv env
 $ . env/bin/activate
 $ easy_install Flask
-```
 
-```
 Run the server on localhost:5000:
 $ python v2.py
 ```
