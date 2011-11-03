@@ -22,7 +22,7 @@ $ python v2.py
 Configuration
 -------------
 
-Set the debug mode, organization, and jurisdiction_id in v2.py.
+Set the debug mode, organization, and jurisdiction_id in [v2.py](https://github.com/miamidade/georeport-server/blob/master/v2.py).
 
 ```python
 # Configuration
@@ -31,7 +31,7 @@ ORGANIZATION = 'Miami-Dade County'
 JURISDICTION = 'miamidade.gov'
 ```
 
-Set custom service request types, definitions, and attributes in data.py.
+Set custom service request types, definitions, and attributes in [data.py](https://github.com/miamidade/georeport-server/blob/master/data.py).
 
 
 Bug tracker
