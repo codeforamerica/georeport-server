@@ -4,7 +4,6 @@
     {% block head %}
     <title>{% block title %}{% endblock %} - {{ org }}</title>
     <meta charset="utf-8">
-    <title>Julian Bonilla</title>
     <meta name="description" content="Open311 GeoReport v2 Server">
     <meta name="author" content="Julian Bonilla">
 
@@ -41,7 +40,7 @@
       {% block content %}{% endblock %}
       <footer>
         {% block footer %}
-          <p>&copy; <a href="http://miamidade.gov">Miami-Dade County</a> 2011</p>
+        <p>&copy; <a href="http://{{ jurisdiction }}">{{ org }}</a> 2011</p>
         {% endblock %}        
       </footer>
     </div>
