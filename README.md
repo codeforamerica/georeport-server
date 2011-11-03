@@ -11,7 +11,9 @@ $ cd georeport-server
 $ virtualenv env
 $ . env/bin/activate
 $ easy_install Flask
+```
 
+```
 Run the server on localhost:5000:
 $ python v2.py
 ```
