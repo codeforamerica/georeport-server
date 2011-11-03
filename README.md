@@ -19,6 +19,21 @@ $ python v2.py
 ```
 
 
+Configuration
+-------------
+
+Set the debug mode, organization, and jurisdiction_id in v2.py.
+
+```python
+# Configuration
+DEBUG = True
+ORGANIZATION = 'Miami-Dade County'
+JURISDICTION = 'miamidade.gov'
+```
+
+Set custom service request types, definitions, and attributes in data.py.
+
+
 Bug tracker
 -----------
 
