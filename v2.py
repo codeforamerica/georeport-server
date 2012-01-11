@@ -8,6 +8,7 @@
     :author: Julian Bonilla (@julianbonilla)
     :license: Apache License v2.0, see LICENSE for more details.
 """
+import os
 from data import service_types, service_definitions, service_discovery, srs
 from flask import Flask, render_template, request, abort, json, jsonify, make_response
 import random
@@ -140,6 +141,6 @@ def save(service_request):
     # Implementation specific.  Just return a random SR id for now
     return {'service_request_id':random.randint(1,10000)}
 
-
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
