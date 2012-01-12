@@ -1,6 +1,9 @@
 GeoReport v2 Server
 ===================
 
+
+NOTE: This code is has been forked to CfA, this file will be updated soonish.
+
 A simple Open311 GeoReport v2 server implementation.  Can be extended to integrate with custom 311 workflows.
 
 http://miamidade.github.com/georeport-server/
