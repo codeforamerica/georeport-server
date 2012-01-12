@@ -15,8 +15,8 @@ import random
 
 # Configuration
 DEBUG = True
-ORGANIZATION = 'Miami-Dade County'
-JURISDICTION = 'miamidade.gov'
+ORGANIZATION = 'Code for America'
+JURISDICTION = 'codeforamerica.org'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
