@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}GeoReport v2 Server{% endblock %}
+{% block content %}
+<br />
+<br />
+<br />
+<br />
+<form action="/requests.json?jurisdiction_id=codeforamerica.org&api_key=xyz" method="post">
+	First name: <input type="text" name="firstname" /><br />
+	Last name: <input type="text" name="lastname" /><br />
+	<INPUT type="submit" value="Send" />
+</form>
+{% endblock %}

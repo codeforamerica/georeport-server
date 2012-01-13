@@ -10,24 +10,35 @@
 """
 import os
 from data import service_types, service_definitions, service_discovery, srs
-from flask import Flask, render_template, request, abort, json, jsonify, make_response
+from flask import Flask, g, render_template, request, abort, json, jsonify, make_response
 import random
+import flaskext.couchdb
 
 # Configuration
 DEBUG = True
 ORGANIZATION = 'Code for America'
 JURISDICTION = 'codeforamerica.org'
+COUCHDB_SERVER = 'http://geopher.net:5984/'
+COUCHDB_DATABASE = 'cfa311'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('GEOREPORT_SETTINGS', silent=True)
 
+manager = flaskext.couchdb.CouchDBManager()
+manager.setup(app)
+# manager.add_viewdef(docs_by_author)  # Install the view
+# manager.sync(app)
 
 @app.route('/')
+
 def index():
     return render_template('index.html', org=app.config['ORGANIZATION'], 
                            jurisdiction=app.config['JURISDICTION'])
 
+@app.route('/create_request')
+def create_request():
+    return render_template('create_request.html')
 
 @app.route('/discovery.<format>')
 def discovery(format):
@@ -89,9 +100,11 @@ def service_requests(format):
 
     if request.method == 'POST':
         # Create service request
-        sr = save(request.form)
+        #sr = save(request.form)
+        g.couch.save(dict(request.form))
         if format == 'json':
-            return jsonify(sr)
+            app.logger.debug('request.form= (%s)', request.form)
+            return jsonify(request.form)
         elif format == 'xml':
             repsonse = make_response(render_template('success.xml', sr=sr))
             response.headers['Content-Type'] = 'text/xml; charset=utf-8'
