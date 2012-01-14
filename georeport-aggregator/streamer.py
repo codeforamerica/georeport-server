@@ -11,7 +11,7 @@ server = Server(uri='http://geopher.net:5984')
 db = server.get_db('cfa311')
 
 # words to track
-words = ['#cfa311nocoffee', '#cfa311nobeer']
+people = ['@cfa311']
 
 def get_last_tweet_id():
     id = db.view('summary/all_ids', descending=True).first()
@@ -19,7 +19,7 @@ def get_last_tweet_id():
 	
 def start_stream():
     try:        
-		with FilterStream("cfa311", "CodeMonkies", track=words) as stream:
+		with FilterStream("cfa311", "CodeMonkies", follow=people) as stream:
 			for tweet in stream:
 				print "Got tweet %s from %-16s\t( tweet %d, rate %.1f tweets/sec)" % \
 					(tweet["id_str"], tweet["user"]["screen_name"], stream.count, stream.rate ) 
