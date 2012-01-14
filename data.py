@@ -4,18 +4,17 @@
 
     Container for service types and definitions.
 
-    :copyright: (c) Miami-Dade County 2011
-    :author: Julian Bonilla (@julianbonilla)
+    :copyright: (c) Code for America 2012
+    :author: Jesse Bounds (@boundsj)
     :license: Apache License v2.0, see LICENSE for more details.
 """
-
 
 api_keys = ['xyz', '12345', '3k76HOWQ']
 
 service_discovery = {
-  "changeset":"2011-02-03 14:18",
-  "contact":"You can email or call for assistance api@mycity.org +1 (555) 555-5555",
-  "key_service":"You can request a key here: http://api.mycity.gov/api_key/request",
+  "changeset":"2012-01-14 12:00",
+  "contact":"Currently, no support is available",
+  "key_service":"Coming soon!",
   "endpoints":[
     {
       "specification":"http://wiki.open311.org/GeoReport_v2",
@@ -51,47 +50,28 @@ service_discovery = {
 
 service_types = [
   {
-    "service_code":001,
-    "service_name":"Cans left out 24x7",
-    "description":"Garbage or recycling cans that have been left out for more than 24 hours after collection. Violators will be cited.",
+    "service_code":"CFA1",
+    "service_name":"Beverage Issues",
+    "description":"Coffee pots not full and empty beer bottles are not tolerated. Violators will be cited.",
     "metadata":False,
     "type":"realtime",
-    "keywords":"lorem, ipsum, dolor",
-    "group":"sanitation"
+    "keywords":"beverage, beer, coffee, drinks",
+    "group":"libations"
   },
   {
-    "service_code":002,
+    "service_code":"CFA2",
     "metadata":False,
     "type":"realtime",
-    "keywords":"lorem, ipsum, dolor",
-    "group":"street",
-    "service_name":"Construction plate shifted",
-    "description":"Metal construction plate covering the street or sidewalk has been moved."
-  },
-  {
-    "service_code":003,
-    "metadata":False,
-    "type":"realtime",
-    "keywords":"lorem, ipsum, dolor",
-    "group":"street",
-    "service_name":"Curb or curb ramp defect",
-    "description":"Sidewalk curb or ramp has problems such as cracking, missing pieces, holes, and/or chipped curb."
-  },
-  {
-    "service_code":"DMV66",
-    "metadata":True,
-    "type":"realtime",
-    "keywords":"lorem, ipsum, dolor",
-    "group":"street",
-    "service_name":"Illegal Parking",
-    "description":"Vehicle parked in no parking zone."
+    "keywords":"dishes, ",
+    "group":"dishes",
+    "service_name":"Dish left out",
+    "description":"Someone was a cotton-headed ninny-muggins and left a dish out and unwashed."
   }
-
 ]
 
 service_definitions = {
-    'DMV66': {
-  "service_code":"DMV66",
+    'CFA': {
+  "service_code":"CFA1",
   "attributes":[
     {
       "variable":True,
@@ -100,20 +80,21 @@ service_definitions = {
       "required":True,
       "datatype_description":None,
       "order":1,
-      "description":"What is the ticket/tag/DL number?",
+      "description":"What is the twitter tag?",
       "values":[
         {
-          "key":123,
-          "name":"Ford"
+          "key":1,
+          "name":"#cfanocoffee"
         },
         {
-          "key":124,
-          "name":"Chrysler"
+          "key":2,
+          "name":"#cfanobeer"
         }
       ]
     }
   ]
 }
+
 }
 
 # Dummy service requests

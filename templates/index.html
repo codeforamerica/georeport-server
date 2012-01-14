@@ -4,7 +4,7 @@
 {% block content %}
 
       <div class="hero-unit">
-        <h1>GeoReport <em>v2</em> Server</h1>
+        <h1>CfA's GeoReport <em>v2</em> Server</h1>
         <p>The <em>GeoReport API</em> allows developers to build applications
         to report non-emergency issues such as graffiti, potholes, and
         street cleaning directly to government organizations like
@@ -65,33 +65,24 @@
             <h5>Response</h5>
             <pre>
 [
-  {
-    "service_code":001,
-    "service_name":"Cans left out 24x7",
-    "description":"Garbage or recycling cans that have been left out for more than 24 hours after collection. Violators will be cited.",
-    "metadata":true,
-    "type":"realtime",
-    "keywords":"lorem, ipsum, dolor",
-    "group":"sanitation"
-  },
-  {
-    "service_code":002,
-    "metadata":true,
-    "type":"realtime",
-    "keywords":"lorem, ipsum, dolor",
-    "group":"street",
-    "service_name":"Construction plate shifted",
-    "description":"Metal construction plate covering the street or sidewalk has been moved."
-  },
-  {
-    "service_code":003,
-    "metadata":true,
-    "type":"realtime",
-    "keywords":"lorem, ipsum, dolor",
-    "group":"street",
-    "service_name":"Curb or curb ramp defect",
-    "description":"Sidewalk curb or ramp has problems such as cracking, missing pieces, holes, and/or chipped curb."
-  }
+	{
+	  "service_code":"CFA1",
+	  "service_name":"Beverage Issues",
+	  "description":"Coffee pots not full and empty beer bottles are not tolerated. Violators will be cited.",
+	  "metadata":False,
+	  "type":"realtime",
+	  "keywords":"beverage, beer, coffee, drinks",
+	  "group":"libations"
+	},
+	{
+	  "service_code":"CFA2",
+	  "metadata":False,
+	  "type":"realtime",
+	  "keywords":"dishes, ",
+	  "group":"dishes",
+	  "service_name":"Dish left out",
+	  "description":"Someone was a cotton-headed ninny-muggins and left a dish out and unwashed."
+	}
 ]
             </pre>
           </div>
@@ -115,33 +106,32 @@
           </div>
           <div class="span12">
             <h5>Request</h5>
-            <pre>GET <a href="/services/DMV66.json?jurisdiction_id={{ jurisdiction }}">/services/DMV66.json?jurisdiction_id={{ jurisdiction }}</a></pre>
+            <pre>GET <a href="/services/CFA.json?jurisdiction_id={{ jurisdiction }}">/services/CFA.json?jurisdiction_id={{ jurisdiction }}</a></pre>
             <h5>Response</h5>
             <pre>
 {
-  "service_code":"DMV66",
+    'CFA': {
+  "service_code":"CFA1",
   "attributes":[
     {
-      "variable":true,
+      "variable":True,
       "code":"WHISHETN",
       "datatype":"singlevaluelist",
-      "required":true,
-      "datatype_description":null,
+      "required":True,
+      "datatype_description":None,
       "order":1,
-      "description":"What is the ticket/tag/DL number?",
+      "description":"What is the twitter tag?",
       "values":[
         {
-          "key":123,
-          "name":"Ford"
+          "key":1,
+          "name":"#cfanocoffee"
         },
         {
-          "key":124,
-          "name":"Chrysler"
+          "key":2,
+          "name":"#cfanobeer"
         }
       ]
     }
-  ]
-}
             </pre>
           </div>
         </div>

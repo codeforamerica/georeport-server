@@ -13,6 +13,7 @@ from data import service_types, service_definitions, service_discovery, srs
 from flask import Flask, g, render_template, request, abort, json, jsonify, make_response
 import random
 import flaskext.couchdb
+from couchdbkit import *
 
 # Configuration
 DEBUG = True
@@ -29,6 +30,10 @@ manager = flaskext.couchdb.CouchDBManager()
 manager.setup(app)
 # manager.add_viewdef(docs_by_author)  # Install the view
 # manager.sync(app)
+
+#couchdb init
+server = Server(uri='http://geopher.net:5984')
+db = server.get_db('cfa311')
 
 @app.route('/')
 
@@ -52,7 +57,6 @@ def discovery(format):
     else:
         abort(404)
 
-
 @app.route('/services.<format>')
 def service_list(format):
     """Provide a list of acceptable 311 service request types and their 
@@ -69,7 +73,6 @@ def service_list(format):
         return response
     else:
         abort(404)
-
 
 @app.route('/services/<service_code>.<format>')
 def service_definition(service_code, format):
@@ -89,38 +92,50 @@ def service_definition(service_code, format):
     else:
         abort(404)
 
-
+def format_twitter_to_311(documents):		
+    cfa311docs = []
+    for document in documents:
+	    cfa311doc = {}
+	    cfa311doc['status'] = 'open'
+	    cfa311doc['address_id'] = '999'
+	    cfa311doc['description'] = document['value']['text']
+	    cfa311doc['service_code'] = 'CFA1'
+	    cfa311doc['service_request_id'] = document['value']['id']
+	    cfa311doc['updated_datetime'] = document['value']['created_at']
+	    cfa311doc['address'] = document['value']['place']['full_name']
+	    cfa311doc['lat'] = document['value']['geo']['coordinates'][0]
+	    cfa311doc['long'] = document['value']['geo']['coordinates'][1]
+	    cfa311doc['agency_responsible'] = 'fellows'
+	    cfa311doc['address'] = document['value']['place']['full_name']
+	    cfa311doc['media_url'] = document['value']['entities']['media'][0]['media_url_https']
+	    cfa311docs.append(cfa311doc)
+    return cfa311docs            
+        
 @app.route('/requests.<format>', methods=['GET', 'POST'])
 def service_requests(format):
     """"Create service requests.
     Query the current status of multiple requests.
     """
-    if format not in ('json', 'xml'):
+    if format not in ('json'):
         abort(404)
 
     if request.method == 'POST':
         # Create service request
-        #sr = save(request.form)
         g.couch.save(dict(request.form))
         if format == 'json':
             app.logger.debug('request.form= (%s)', request.form)
             return jsonify(request.form)
-        elif format == 'xml':
-            repsonse = make_response(render_template('success.xml', sr=sr))
-            response.headers['Content-Type'] = 'text/xml; charset=utf-8'
-            return response
     else:
         # Return a list of SRs that match the query
         sr = search(request.form)
         if format == 'json':
-            response = make_response(json.dumps(srs))
+            #response = make_response(json.dumps(srs))   
+            #response = make_response(json.dumps(g.couch.get('158007579522506752')))
+            docs = list(db.view('summary/all'))
+            #response = make_response(json.dumps(docs))
+            response = make_response(json.dumps(format_twitter_to_311(docs)))
             response.headers['Content-Type'] = 'application/json; charset=utf-8'
             return response
-        elif format == 'xml':
-            response = make_response(render_template('service-requests.xml', service_requests=srs))
-            response.headers['Content-Type'] = 'text/xml; charset=utf-8'
-            return response
-
 
 @app.route('/requests/<service_request_id>.<format>')
 def service_request(service_request_id, format):
@@ -135,7 +150,6 @@ def service_request(service_request_id, format):
     else:
         abort(404)
 
-
 @app.route('/tokens/<token>.<format>')
 def token(token, format):
     """Get a service request id from a temporary token. This is unnecessary
@@ -143,11 +157,9 @@ def token(token, format):
     """
     abort(404)
 
-
 def search(service_request):
     """Query service requests"""
     pass # Implementation specific
-
 
 def save(service_request):
     """Save service request"""
