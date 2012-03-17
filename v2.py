@@ -10,16 +10,26 @@
 """
 from data import service_types, service_definitions, service_discovery, srs
 from flask import Flask, render_template, request, abort, json, jsonify, make_response
-import random
+import random, datetime
+import pymongo
+import iso8601
 
 # Configuration
 DEBUG = True
-ORGANIZATION = 'Miami-Dade County'
-JURISDICTION = 'miamidade.gov'
+ORGANIZATION = 'Chicago'
+JURISDICTION = 'cityofchicago.org'
+
+DB_HOST = 'localhost'
+DB_PORT = 27017
+DB_NAME = '311Data'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('GEOREPORT_SETTINGS', silent=True)
+
+# TODO: leaving the connection sitting here globally is probably not so great
+mongo_connection = pymongo.Connection(DB_HOST, DB_PORT)
+db = mongo_connection[DB_NAME]
 
 
 @app.route('/')
@@ -47,12 +57,17 @@ def service_list(format):
     associated service codes. These request types can be unique to the
     city/jurisdiction.
     """
+    def clean_id(document):
+      del document['_id']
+      return document
+      
+    services = map(clean_id, db.Services.find())
     if format == 'json':
-        response = make_response(json.dumps(service_types))
+        response = make_response(json.dumps(services))
         response.headers['Content-Type'] = 'application/json; charset=utf-8'
         return response
     elif format == 'xml':
-        response = make_response(render_template('services.xml', services=service_types))
+        response = make_response(render_template('services.xml', services=services))
         response.headers['Content-Type'] = 'text/xml; charset=utf-8'
         return response
     else:
@@ -64,6 +79,7 @@ def service_definition(service_code, format):
     """Define attributes associated with a service code.
     These attributes can be unique to the city/jurisdiction.
     """
+    # TODO: return a dummy for any given service, since we don't have the relevant info for this
     if service_code not in service_definitions:
         abort(404)
 
@@ -97,7 +113,7 @@ def service_requests(format):
             return response
     else:
         # Return a list of SRs that match the query
-        sr = search(request.form)
+        srs = search(request.args)
         if format == 'json':
             response = make_response(json.dumps(srs))
             response.headers['Content-Type'] = 'application/json; charset=utf-8'
@@ -111,11 +127,12 @@ def service_requests(format):
 @app.route('/requests/<service_request_id>.<format>')
 def service_request(service_request_id, format):
     """Query the current status of an individual request."""
-    result = search(request.form)
+    # TODO: handle bad request ids
+    result = get_single_service_request(service_request_id)
     if format == 'json':
-        return jsonify(srs[0])
+        return jsonify(result)
     elif format == 'xml':
-        response = make_response(render_template('service-requests.xml', service_requests=[srs[0]]))
+        response = make_response(render_template('service-requests.xml', service_requests=[result]))
         response.headers['Content-Type'] = 'text/xml; charset=utf-8'
         return response
     else:
@@ -130,9 +147,62 @@ def token(token, format):
     abort(404)
 
 
-def search(service_request):
+def get_single_service_request(id):
+  # TODO: handle bad IDs
+  # TODO: handle multiple listings in DB :\
+  result = db.ServiceRequests.find_one({ 'service_request_number': id })
+  return format_request_for_georeport(sr)
+
+
+def format_request_for_georeport(request):
+  """Format an SR from the database to match Open311"""
+  result = {
+    'service_request_id': request['service_request_number'],
+    'status': request['status'] == 'completed' and 'closed' or request['status'],
+    'service_name': request['service_request_type'],
+    'service_code': 'UHOH', # TODO: fix this
+    'description': '', # we don't have this
+    'requested_datetime': request['creation_date'],
+    'updated_datetime': request['updated_on'],
+    'address': request['address'],
+    'address_id': '', # don't have this
+    'zipcode': request['zip'],
+    'lat': request['latitude'],
+    'long': request['longitude'],
+  }
+  return result
+
+
+def search(args):
     """Query service requests"""
-    pass # Implementation specific
+    print json.dumps(args)
+    query = {}
+    if 'service_request_id' in args:
+      query = { 'service_request_number': { '$in': map(lambda item: item.strip(), args['service_request_id'].split(',')) } }
+      
+    else:
+      if 'status' in args:
+        statuses = map(lambda item: item.lower().strip(), args['status'].split(','))
+        statuses = map(lambda item: item == 'closed' and 'completed' or item, statuses)
+        query['status'] = { '$in': statuses }
+      
+      if 'service_code' in args:
+        query['service_request_code'] = { '$in': map(lambda item: item.strip(), args['service_code'].split(',')) }
+      
+      if 'start_date' in args:
+        query['created'] = { '$gte': iso8601.parse_date(args['start_date']) }
+      else:
+        query['created'] = { '$gte': datetime.datetime.now() - datetime.timedelta(90) }
+      
+      if 'end_date' in args:
+        end = iso8601.parse_date(args['end_date'])
+        if 'created' in query:
+          query['created']['$lte'] = end
+        else:
+          query['created'] = { '$lte': end }
+    
+    results = map(format_request_for_georeport, db.ServiceRequests.find(query))
+    return results
 
 
 def save(service_request):
